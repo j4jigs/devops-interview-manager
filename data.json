@@ -1,0 +1,17 @@
+{
+  "aws": [
+    {
+      "title": "EC2 Interview Guide",
+      "url": "https://example.com"
+    }
+  ],
+  "kubernetes": [
+    {
+      "title": "K8s Pod Errors",
+      "url": "https://example.com"
+    }
+  ],
+  "terraform": [],
+  "devops": [],
+  "mix": []
+}
