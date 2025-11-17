@@ -62,6 +62,7 @@
         display: flex;
         margin-bottom: 15px;
         border-bottom: 2px solid var(--card-border);
+        overflow-x: auto;
     }
 
     .tab {
@@ -69,6 +70,7 @@
         cursor: pointer;
         font-weight: 600;
         border-bottom: 3px solid transparent;
+        white-space: nowrap;
     }
 
     .tab.active {
@@ -76,15 +78,13 @@
         color: var(--accent);
     }
 
-    .search-box {
-        margin: 20px 0;
-    }
     .search-box input {
         width: 100%;
         padding: 12px;
         font-size: 16px;
         border: 1px solid var(--card-border);
         border-radius: 6px;
+        margin: 20px 0;
     }
 
     .accordion {
@@ -99,7 +99,6 @@
         cursor: pointer;
         font-size: 18px;
         font-weight: 700;
-        margin: 0;
     }
 
     .accordion-content {
@@ -109,7 +108,7 @@
 
     .video-list {
         list-style: none;
-        padding-left: 0;
+        padding: 0;
     }
 
     .video-list li {
@@ -119,6 +118,7 @@
         border-radius: 5px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .video-list a {
@@ -132,6 +132,7 @@
         border-radius: 4px;
         border: none;
         color: white;
+        cursor: pointer;
     }
     .edit-btn { background: #6c5ce7; }
     .delete-btn { background: #d63031; }
@@ -156,14 +157,10 @@
 
 <body>
 
-<header>
-    DevOps Interview Resource Manager
-</header>
-
+<header>DevOps Interview Resource Manager</header>
 <button class="toggle-mode" onclick="toggleDarkMode()">🌙 Dark / Light</button>
 
 <div class="container">
-
     <div class="tabs">
         <div class="tab active" data-target="aws">AWS</div>
         <div class="tab" data-target="k8s">Kubernetes</div>
@@ -174,16 +171,17 @@
         <div class="tab" data-target="git">Git/GitHub</div>
     </div>
 
-    <div class="search-box">
-        <input type="text" id="search" placeholder="Search in all videos..." onkeyup="searchVideos()" />
-    </div>
+    <input type="text" id="search" class="search-box" placeholder="Search in all videos..." onkeyup="searchVideos()" />
 
     <div id="sections"></div>
-
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+let savedData = JSON.parse(localStorage.getItem("devopsLinks")) || {};
+let darkMode = localStorage.getItem("darkMode") || "light";
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (darkMode === "dark") document.body.classList.add("dark");
 
     const categories = {
         aws: "AWS Interview Preparation",
@@ -195,19 +193,14 @@ document.addEventListener("DOMContentLoaded", function() {
         git: "Git & GitHub Interview Preparation"
     };
 
-    const sectionContainer = document.getElementById("sections");
+    const container = document.getElementById("sections");
 
-    // Load saved data or empty object
-    let savedData = JSON.parse(localStorage.getItem("devopsLinks")) || {};
-
-    // Generate sections
-    Object.keys(categories).forEach(key => {
-        sectionContainer.innerHTML += `
+    for (let key in categories) {
+        container.innerHTML += `
         <div class="accordion" data-category="${key}">
             <h3 class="accordion-header">${categories[key]}</h3>
             <div class="accordion-content">
                 <ul class="video-list" id="${key}-list"></ul>
-
                 <div class="add-form">
                     <input id="${key}-title" placeholder="Video title">
                     <input id="${key}-url" placeholder="YouTube URL">
@@ -215,16 +208,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
             </div>
         </div>`;
-    });
+    }
 
-    // Load saved videos into UI
-    Object.keys(savedData).forEach(category => {
-        savedData[category].forEach(video => {
-            renderVideo(category, video.title, video.url);
-        });
-    });
+    for (let category in savedData) {
+        savedData[category].forEach(v => renderVideo(category, v.title, v.url));
+    }
 
-    // Accordion toggle
     document.querySelectorAll(".accordion-header").forEach(header => {
         header.onclick = () => {
             const content = header.nextElementSibling;
@@ -232,38 +221,27 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     });
 
-    // Show only AWS by default
-    document.querySelectorAll(".accordion").forEach(sec => {
-        sec.style.display = sec.getAttribute("data-category") !== "aws" ? "none" : "block";
-    });
+    showCategory("aws");
 
-    // Tab switching
     document.querySelectorAll(".tab").forEach(tab => {
         tab.onclick = () => {
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
-
-            const target = tab.getAttribute("data-target");
-
-            document.querySelectorAll(".accordion").forEach(sec => {
-                sec.style.display = sec.getAttribute("data-category") === target ? "block" : "none";
-            });
+            showCategory(tab.dataset.target);
         };
     });
-
 });
 
-// ========== FUNCTIONS ==========
-
-// Save to localStorage
-function saveData() {
-    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
+function showCategory(category) {
+    document.querySelectorAll(".accordion").forEach(sec => {
+        sec.style.display = sec.dataset.category === category ? "block" : "none";
+    });
 }
 
-// Render a video entry in UI
 function renderVideo(category, title, url) {
-    let list = document.getElementById(`${category}-list`);
+    const list = document.getElementById(`${category}-list`);
     const li = document.createElement("li");
+
     li.innerHTML = `
         <a href="${url}" target="_blank">${title}</a>
         <div>
@@ -274,34 +252,24 @@ function renderVideo(category, title, url) {
     list.appendChild(li);
 }
 
-// Data container
-let savedData = JSON.parse(localStorage.getItem("devopsLinks")) || {};
-
-// Add a video
 function addVideo(category) {
-    let title = document.getElementById(`${category}-title`).value;
-    let url = document.getElementById(`${category}-url`).value;
+    const title = document.getElementById(`${category}-title`).value;
+    const url = document.getElementById(`${category}-url`).value;
 
     if (!title || !url) return alert("Enter both title and URL!");
 
-    // Save to memory
     if (!savedData[category]) savedData[category] = [];
     savedData[category].push({ title, url });
 
-    // Save permanently
-    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
-
-    // Render on UI
+    saveData();
     renderVideo(category, title, url);
 
-    // Clear inputs
     document.getElementById(`${category}-title`).value = "";
     document.getElementById(`${category}-url`).value = "";
 }
 
-// Edit a video
 function editVideo(category, btn) {
-    const li = btn.parentElement.parentElement;
+    const li = btn.closest("li");
     const link = li.querySelector("a");
 
     const newTitle = prompt("New title:", link.textContent);
@@ -309,46 +277,40 @@ function editVideo(category, btn) {
 
     if (!newTitle || !newUrl) return;
 
-    // Update UI
-    link.textContent = newTitle;
-    link.href = newUrl;
-
-    // Update storage
     savedData[category] = savedData[category].map(v =>
         v.url === link.href ? { title: newTitle, url: newUrl } : v
     );
-    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
+
+    link.textContent = newTitle;
+    link.href = newUrl;
+    saveData();
 }
 
-// Delete a video
 function deleteVideo(category, btn) {
-    const li = btn.parentElement.parentElement;
-    const link = li.querySelector("a");
+    const li = btn.closest("li");
+    const url = li.querySelector("a").href;
 
-    // Remove from UI
     li.remove();
-
-    // Remove from storage
-    savedData[category] = savedData[category].filter(v => v.url !== link.href);
-    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
+    savedData[category] = savedData[category].filter(v => v.url !== url);
+    saveData();
 }
 
-// Search filter
 function searchVideos() {
     const term = document.getElementById("search").value.toLowerCase();
-
     document.querySelectorAll(".video-list li").forEach(li => {
-        li.style.display = li.textContent.toLowerCase().includes(term)
-            ? "flex"
-            : "none";
+        li.style.display = li.textContent.toLowerCase().includes(term) ? "flex" : "none";
     });
 }
 
-// Theme toggle
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
+    darkMode = document.body.classList.contains("dark") ? "dark" : "light";
+    localStorage.setItem("darkMode", darkMode);
 }
 
+function saveData() {
+    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
+}
 </script>
 
 </body>
