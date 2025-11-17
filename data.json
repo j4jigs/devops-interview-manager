@@ -1,17 +1,14 @@
 {
   "aws": [
     {
-      "title": "EC2 Interview Guide",
-      "url": "https://example.com"
+      "title": "AWS S3 Basics",
+      "url": "https://www.youtube.com/watch?v=example"
     }
   ],
-  "kubernetes": [
-    {
-      "title": "K8s Pod Errors",
-      "url": "https://example.com"
-    }
-  ],
-  "terraform": [],
-  "devops": [],
-  "mix": []
+  "k8s": [],
+  "tf": [],
+  "docker": [],
+  "linux": [],
+  "cicd": [],
+  "git": []
 }
