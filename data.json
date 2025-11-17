@@ -1,14 +1,7 @@
 {
-  "aws": [
-    {
-      "title": "AWS S3 Basics",
-      "url": "https://www.youtube.com/watch?v=example"
-    }
-  ],
+  "aws": [],
   "k8s": [],
   "tf": [],
-  "docker": [],
-  "linux": [],
-  "cicd": [],
-  "git": []
+  "devops": [],
+  "other": []
 }
