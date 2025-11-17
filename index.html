@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Interview Resource Manager - Jignesh Patel</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DevOps Interview Resource Manager</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <header>
-        <h1>DevOps Interview Resource Manager</h1>
-        <h3 class="owner">Created & Managed by: Jignesh Patel</h3>
-    </header>
 
-    <nav>
-        <button onclick="loadCategory('aws')">AWS</button>
-        <button onclick="loadCategory('kubernetes')">Kubernetes</button>
-        <button onclick="loadCategory('terraform')">Terraform</button>
-        <button onclick="loadCategory('devops')">DevOps</button>
-        <button onclick="loadCategory('mix')">Mix Content</button>
-    </nav>
+<header>
+  DevOps Interview Resource Manager <br>
+  <small>Owner: Jignesh Patel</small>
+</header>
 
-    <section id="content">
-        <p>Select a category to view saved links.</p>
-    </section>
+<nav id="tabs">
+  <button class="active" data-target="aws">AWS</button>
+  <button data-target="k8s">Kubernetes</button>
+  <button data-target="tf">Terraform</button>
+  <button data-target="docker">Docker</button>
+  <button data-target="linux">Linux</button>
+  <button data-target="cicd">CI/CD</button>
+  <button data-target="git">Git/GitHub</button>
+</nav>
 
-    <script src="script.js"></script>
+<div class="container" id="tabContainer"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
