@@ -1,167 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DevOps Interview Resource Manager</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DevOps Interview Resource Manager - Jignesh Patel</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
 <style>
-    :root {
+    :root{
         --bg: #f5f6fa;
         --text: #2d3436;
-        --card: #ffffff;
-        --accent: #0984e3;
-        --card-border: #dcdde1;
+        --card:#ffffff;
+        --accent:#0984e3;
+        --card-border:#dcdde1;
+    }
+    body.dark{
+        --bg:#1e272e;
+        --text:#d2dae2;
+        --card:#2f3640;
+        --accent:#74b9ff;
+        --card-border:#3d3d3d;
     }
 
-    body.dark {
-        --bg: #1e272e;
-        --text: #d2dae2;
-        --card: #2f3640;
-        --accent: #74b9ff;
-        --card-border: #3d3d3d;
+    /* lightweight DevOps SVG pattern background (inline, fast) */
+    body{
+        font-family:"Roboto",sans-serif;
+        margin:0;
+        color:var(--text);
+        background-color:var(--bg);
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='0.15'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%239bb7d6' stroke-opacity='0.12' stroke-width='1'%3E%3Ccircle cx='60' cy='60' r='18'/%3E%3Cpath d='M110 40 L140 40 L140 70'/%3E%3Crect x='200' y='40' width='28' height='18' rx='3'/%3E%3Cpath d='M320 220 L350 220 L350 250'/%3E%3Ccircle cx='320' cy='320' r='14'/%3E%3C/g%3E%3C/svg%3E");
+        background-size:500px 500px;
+        background-attachment:fixed;
+        background-repeat:repeat;
     }
 
-    body {
-        font-family: "Roboto", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        margin: 0;
+    header{
+        background:var(--accent);
+        color:white;
+        padding:18px 16px;
+        text-align:center;
+        font-weight:700;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+    }
+    header h1{
+        margin:0;
+        font-size:20px;
+        font-weight:700;
+    }
+    header .owner{
+        font-size:14px;
+        font-weight:500;
+        opacity:0.95;
     }
 
-    header {
-        background: var(--accent);
-        padding: 20px;
-        text-align: center;
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
+    .container{
+        width:92%;
+        max-width:1100px;
+        margin:22px auto;
     }
 
-    .container {
-        width: 90%;
-        max-width: 1100px;
-        margin: 20px auto;
+    .toggle-mode{
+        position:fixed;
+        right:18px;
+        top:18px;
+        background:white;
+        border:0;
+        padding:8px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        box-shadow:0 2px 6px rgba(0,0,0,0.08);
+        font-size:14px;
     }
 
-    .toggle-mode {
-        float: right;
-        margin-top: -45px;
-        margin-right: 20px;
-        background: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
+    .tabs{
+        display:flex;
+        gap:8px;
+        overflow-x:auto;
+        padding-bottom:8px;
+        border-bottom:2px solid var(--card-border);
+        margin-bottom:14px;
+    }
+    .tab{
+        padding:8px 14px;
+        cursor:pointer;
+        background:transparent;
+        border-radius:6px 6px 0 0;
+        font-weight:600;
+        white-space:nowrap;
+        border-bottom:3px solid transparent;
+    }
+    .tab.active{
+        color:var(--accent);
+        border-bottom-color:var(--accent);
+        background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
     }
 
-    .tabs {
-        display: flex;
-        margin-bottom: 15px;
-        border-bottom: 2px solid var(--card-border);
-        overflow-x: auto;
+    .search-box{
+        margin:14px 0;
+    }
+    .search-box input{
+        width:100%;
+        padding:12px;
+        border-radius:8px;
+        border:1px solid var(--card-border);
+        font-size:15px;
     }
 
-    .tab {
-        padding: 10px 18px;
-        cursor: pointer;
-        font-weight: 600;
-        border-bottom: 3px solid transparent;
-        white-space: nowrap;
+    .section {
+        display:none; /* only active section will be visible */
+        transition:opacity .18s ease;
     }
 
-    .tab.active {
-        border-bottom: 3px solid var(--accent);
-        color: var(--accent);
+    .panel {
+        background:var(--card);
+        border-radius:8px;
+        padding:14px;
+        margin-bottom:14px;
+        border:1px solid var(--card-border);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
 
-    .search-box input {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        border: 1px solid var(--card-border);
-        border-radius: 6px;
-        margin: 20px 0;
+    .panel h3{
+        margin:0 0 8px 0;
+        font-size:18px;
     }
 
-    .accordion {
-        background: var(--card);
-        border-radius: 6px;
-        margin-bottom: 15px;
-        padding: 15px;
-        border: 1px solid var(--card-border);
+    .video-list{
+        list-style:none;
+        padding:0;
+        margin:8px 0 0 0;
+    }
+    .video-list li{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:10px;
+        border-radius:6px;
+        margin-bottom:8px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.01), transparent);
+    }
+    .video-list a{
+        color:var(--accent);
+        text-decoration:none;
+        max-width:78%;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
     }
 
-    .accordion-header {
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: 700;
+    .controls{
+        display:flex;
+        gap:8px;
+        align-items:center;
     }
-
-    .accordion-content {
-        display: none;
-        margin-top: 10px;
-    }
-
-    .video-list {
-        list-style: none;
-        padding: 0;
-    }
-
-    .video-list li {
-        padding: 10px;
-        background: var(--bg);
-        margin-bottom: 8px;
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .video-list a {
-        color: var(--accent);
-        text-decoration: none;
-    }
-
     .edit-btn, .delete-btn {
-        margin-left: 10px;
-        padding: 4px 8px;
-        border-radius: 4px;
         border: none;
-        color: white;
-        cursor: pointer;
+        padding:6px 8px;
+        color:white;
+        border-radius:6px;
+        cursor:pointer;
+        font-size:13px;
     }
-    .edit-btn { background: #6c5ce7; }
-    .delete-btn { background: #d63031; }
+    .edit-btn{ background:#6c5ce7;}
+    .delete-btn{ background:#d63031;}
 
-    .add-form input {
-        width: 40%;
-        padding: 8px;
-        margin-right: 10px;
+    .add-form{
+        display:flex;
+        gap:8px;
+        margin-top:12px;
+        flex-wrap:wrap;
+    }
+    .add-form input, .add-form select {
+        padding:8px;
+        border-radius:6px;
+        border:1px solid var(--card-border);
+        font-size:14px;
+    }
+    .add-form .add-btn{
+        padding:8px 12px;
+        background:var(--accent);
+        border:none;
+        color:white;
+        border-radius:6px;
+        cursor:pointer;
+        font-weight:600;
     }
 
-    .add-form button {
-        padding: 8px 12px;
-        background: var(--accent);
-        border: none;
-        border-radius: 5px;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
+    /* small screens */
+    @media (max-width:640px){
+        header h1{ font-size:16px; }
+        .owner{ display:none; }
+        .add-form input{ width:100%; }
     }
 </style>
 </head>
-
 <body>
 
-<header>DevOps Interview Resource Manager</header>
+<header>
+  <h1>DevOps Interview Resource Manager <span class="owner">— Jignesh Patel</span></h1>
+</header>
+
 <button class="toggle-mode" onclick="toggleDarkMode()">🌙 Dark / Light</button>
 
 <div class="container">
-    <div class="tabs">
+    <div class="tabs" role="tablist" aria-label="Resource categories">
         <div class="tab active" data-target="aws">AWS</div>
         <div class="tab" data-target="k8s">Kubernetes</div>
         <div class="tab" data-target="tf">Terraform</div>
@@ -169,149 +215,228 @@
         <div class="tab" data-target="linux">Linux</div>
         <div class="tab" data-target="cicd">CI/CD</div>
         <div class="tab" data-target="git">Git/GitHub</div>
+        <div class="tab" data-target="aws-pdf">AWS PDF Files</div>
+        <div class="tab" data-target="mixed">Mixed Content</div>
     </div>
 
-    <input type="text" id="search" class="search-box" placeholder="Search in all videos..." onkeyup="searchVideos()" />
+    <div class="search-box">
+        <input id="search" placeholder="Search across all items..." oninput="searchItems()" />
+    </div>
 
-    <div id="sections"></div>
+    <!-- Sections: each tab becomes a section and holds accordions -->
+    <div id="sections-area">
+
+        <!-- Sections will be dynamically injected by JS -->
+    </div>
 </div>
 
 <script>
-let savedData = JSON.parse(localStorage.getItem("devopsLinks")) || {};
-let darkMode = localStorage.getItem("darkMode") || "light";
+/* ======= Persistent state keys ======= */
+const STORAGE_KEY = "devopsLinks_v1";
+const THEME_KEY = "devopsTheme_v1";
 
+/* ======= Basic savedData structure ======= */
+let savedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+let theme = localStorage.getItem(THEME_KEY) || "light";
+
+/* categories and labels — includes new tabs */
+const categories = {
+    "aws":"AWS Interview Preparation",
+    "k8s":"Kubernetes Interview Preparation",
+    "tf":"Terraform Interview Preparation",
+    "docker":"Docker Interview Preparation",
+    "linux":"Linux Interview Preparation",
+    "cicd":"CI/CD & Jenkins Interview Preparation",
+    "git":"Git & GitHub Interview Preparation",
+    "aws-pdf":"AWS PDF Files",
+    "mixed":"Mixed Content"
+};
+
+/* initial DOM setup on load */
 document.addEventListener("DOMContentLoaded", () => {
-    if (darkMode === "dark") document.body.classList.add("dark");
+    // theme
+    if (theme === "dark") document.body.classList.add("dark");
 
-    const categories = {
-        aws: "AWS Interview Preparation",
-        k8s: "Kubernetes Interview Preparation",
-        tf: "Terraform Interview Preparation",
-        docker: "Docker Interview Preparation",
-        linux: "Linux Interview Preparation",
-        cicd: "CI/CD & Jenkins Interview Preparation",
-        git: "Git & GitHub Interview Preparation"
-    };
-
-    const container = document.getElementById("sections");
-
-    for (let key in categories) {
-        container.innerHTML += `
-        <div class="accordion" data-category="${key}">
-            <h3 class="accordion-header">${categories[key]}</h3>
-            <div class="accordion-content">
-                <ul class="video-list" id="${key}-list"></ul>
-                <div class="add-form">
-                    <input id="${key}-title" placeholder="Video title">
-                    <input id="${key}-url" placeholder="YouTube URL">
-                    <button onclick="addVideo('${key}')">Add</button>
-                </div>
-            </div>
-        </div>`;
+    // build sections for each category
+    const container = document.getElementById("sections-area");
+    for (const key in categories) {
+        container.insertAdjacentHTML("beforeend", buildSectionHTML(key, categories[key]));
     }
 
-    for (let category in savedData) {
-        savedData[category].forEach(v => renderVideo(category, v.title, v.url));
+    // populate saved items
+    for (const cat in savedData) {
+        if (savedData[cat] && Array.isArray(savedData[cat])) {
+            savedData[cat].forEach(item => renderItem(cat, item.title, item.url));
+        }
     }
 
-    document.querySelectorAll(".accordion-header").forEach(header => {
-        header.onclick = () => {
-            const content = header.nextElementSibling;
-            content.style.display = content.style.display === "block" ? "none" : "block";
-        };
+    // add accordion toggles (each section has 1 accordion panel here)
+    document.querySelectorAll(".panel-header").forEach(header => {
+        header.addEventListener("click", () => {
+            const panel = header.nextElementSibling;
+            panel.style.display = panel.style.display === "block" ? "none" : "block";
+        });
     });
 
-    showCategory("aws");
-
+    // tab click behavior
     document.querySelectorAll(".tab").forEach(tab => {
-        tab.onclick = () => {
+        tab.addEventListener("click", () => {
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
-            showCategory(tab.dataset.target);
-        };
+            showSection(tab.dataset.target);
+        });
     });
+
+    // show default section (first tab/default)
+    const defaultTab = document.querySelector(".tab.active");
+    if (defaultTab) showSection(defaultTab.dataset.target);
 });
 
-function showCategory(category) {
-    document.querySelectorAll(".accordion").forEach(sec => {
-        sec.style.display = sec.dataset.category === category ? "block" : "none";
+/* ======= Build HTML for a section ======= */
+function buildSectionHTML(key, label){
+    // for aws-pdf and mixed, label placeholder slightly different
+    const urlPlaceholder = key === "aws-pdf" ? "PDF URL (https://...)" : "YouTube / Link URL (https://...)";
+    const titlePlaceholder = key === "aws-pdf" ? "PDF Title" : "Title";
+
+    return `
+    <section id="section-${key}" class="section" data-category="${key}">
+        <div class="panel">
+            <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+                <h3>${label}</h3>
+                <small style="opacity:0.7">Click heading to expand/collapse</small>
+            </div>
+
+            <div class="panel-content" style="display:block;margin-top:10px;">
+                <ul id="${key}-list" class="video-list"></ul>
+
+                <div class="add-form" style="margin-top:10px;">
+                    <input id="${key}-title" placeholder="${titlePlaceholder}" />
+                    <input id="${key}-url" placeholder="${urlPlaceholder}" />
+                    <select id="${key}-type" style="min-width:110px;">
+                        <option value="video">Video</option>
+                        <option value="pdf"${key==="aws-pdf" ? " selected": ""}>PDF</option>
+                        <option value="note">Note</option>
+                    </select>
+                    <button class="add-btn" onclick="addItem('${key}')">Add</button>
+                </div>
+            </div>
+        </div>
+    </section>`;
+}
+
+/* ======= Show only selected section ======= */
+function showSection(key){
+    document.querySelectorAll(".section").forEach(sec => {
+        sec.style.display = sec.dataset.category === key ? "block" : "none";
     });
 }
 
-function renderVideo(category, title, url) {
+/* ======= Render a single item in UI ======= */
+function renderItem(category, title, url){
     const list = document.getElementById(`${category}-list`);
-    const li = document.createElement("li");
+    if (!list) return;
 
+    const li = document.createElement("li");
     li.innerHTML = `
-        <a href="${url}" target="_blank">${title}</a>
-        <div>
-            <button class="edit-btn" onclick="editVideo('${category}', this)">Edit</button>
-            <button class="delete-btn" onclick="deleteVideo('${category}', this)">Delete</button>
+        <a href="${escapeHtml(url)}" target="_blank" title="${escapeHtml(title)}">${escapeHtml(title)}</a>
+        <div class="controls">
+            <button class="edit-btn" onclick="editItem('${category}', this)">Edit</button>
+            <button class="delete-btn" onclick="deleteItem('${category}', this)">Delete</button>
         </div>
     `;
     list.appendChild(li);
 }
 
-function addVideo(category) {
-    const title = document.getElementById(`${category}-title`).value;
-    const url = document.getElementById(`${category}-url`).value;
+/* ======= Add item (videos/pdf/mixed) ======= */
+function addItem(category){
+    const titleEl = document.getElementById(`${category}-title`);
+    const urlEl = document.getElementById(`${category}-url`);
+    const typeEl = document.getElementById(`${category}-type`);
 
-    if (!title || !url) return alert("Enter both title and URL!");
+    const title = (titleEl && titleEl.value || "").trim();
+    const url = (urlEl && urlEl.value || "").trim();
+
+    if (!title || !url) {
+        alert("Please enter both title and URL (or PDF link).");
+        return;
+    }
 
     if (!savedData[category]) savedData[category] = [];
-    savedData[category].push({ title, url });
+    savedData[category].push({ title, url, type: typeEl ? typeEl.value : "video" });
 
-    saveData();
-    renderVideo(category, title, url);
+    saveState();
+    renderItem(category, title, url);
 
-    document.getElementById(`${category}-title`).value = "";
-    document.getElementById(`${category}-url`).value = "";
+    if (titleEl) titleEl.value = "";
+    if (urlEl) urlEl.value = "";
 }
 
-function editVideo(category, btn) {
+/* ======= Edit item ======= */
+function editItem(category, btn){
     const li = btn.closest("li");
-    const link = li.querySelector("a");
+    const anchor = li.querySelector("a");
+    const oldUrl = anchor.href;
+    const oldTitle = anchor.textContent;
 
-    const newTitle = prompt("New title:", link.textContent);
-    const newUrl = prompt("New URL:", link.href);
+    const newTitle = prompt("New title:", oldTitle);
+    const newUrl = prompt("New URL:", oldUrl);
 
     if (!newTitle || !newUrl) return;
 
-    savedData[category] = savedData[category].map(v =>
-        v.url === link.href ? { title: newTitle, url: newUrl } : v
-    );
+    // update storage
+    if (Array.isArray(savedData[category])) {
+        savedData[category] = savedData[category].map(obj => obj.url === oldUrl ? { ...obj, title: newTitle, url: newUrl } : obj);
+    }
+    saveState();
 
-    link.textContent = newTitle;
-    link.href = newUrl;
-    saveData();
+    // update UI
+    anchor.textContent = newTitle;
+    anchor.href = newUrl;
 }
 
-function deleteVideo(category, btn) {
+/* ======= Delete item ======= */
+function deleteItem(category, btn){
     const li = btn.closest("li");
-    const url = li.querySelector("a").href;
+    const anchor = li.querySelector("a");
+    const url = anchor.href;
 
     li.remove();
-    savedData[category] = savedData[category].filter(v => v.url !== url);
-    saveData();
+    if (Array.isArray(savedData[category])) {
+        savedData[category] = savedData[category].filter(obj => obj.url !== url);
+    }
+    saveState();
 }
 
-function searchVideos() {
-    const term = document.getElementById("search").value.toLowerCase();
+/* ======= Search across items (filters UI) ======= */
+function searchItems(){
+    const q = document.getElementById("search").value.trim().toLowerCase();
     document.querySelectorAll(".video-list li").forEach(li => {
-        li.style.display = li.textContent.toLowerCase().includes(term) ? "flex" : "none";
+        const text = li.textContent.toLowerCase();
+        li.style.display = q === "" || text.indexOf(q) !== -1 ? "flex" : "none";
     });
 }
 
-function toggleDarkMode() {
+/* ======= Theme toggle and persistence ======= */
+function toggleDarkMode(){
     document.body.classList.toggle("dark");
-    darkMode = document.body.classList.contains("dark") ? "dark" : "light";
-    localStorage.setItem("darkMode", darkMode);
+    theme = document.body.classList.contains("dark") ? "dark" : "light";
+    localStorage.setItem(THEME_KEY, theme);
 }
 
-function saveData() {
-    localStorage.setItem("devopsLinks", JSON.stringify(savedData));
+/* ======= Save to localStorage ======= */
+function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
+}
+
+/* ======= Helpers ======= */
+function escapeHtml(text){
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 </script>
-
 </body>
 </html>
