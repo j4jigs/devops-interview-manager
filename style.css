@@ -1,9 +1,17 @@
 body {
     font-family: Arial, sans-serif;
-    background: url('https://i.imgur.com/7QvZQdl.jpeg'); 
-    background-size: cover;
     margin: 0;
     padding: 0;
+
+    /* Checkerboard background */
+    background-color: #c0c0c0; /* Silver base */
+    background-image: 
+        linear-gradient(45deg, #000000 25%, transparent 25%),
+        linear-gradient(-45deg, #000000 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #000000 75%),
+        linear-gradient(-45deg, transparent 75%, #000000 75%);
+    background-size: 40px 40px; /* Each square ~1 inch */
+    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
 }
 
 header {
@@ -39,7 +47,7 @@ nav button:hover {
 }
 
 #content {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.85); /* Slight transparency for readability */
     margin: 20px;
     padding: 20px;
     border-radius: 10px;
