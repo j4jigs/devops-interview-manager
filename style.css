@@ -10,13 +10,11 @@ header {
     color: white;
     padding: 20px;
     text-align: center;
-    font-weight: bold;
 }
 
 header small {
     display: block;
     font-size: 14px;
-    font-weight: normal;
     margin-top: 5px;
 }
 
@@ -27,21 +25,16 @@ nav {
 }
 
 nav button {
-    margin: 10px;
-    padding: 10px 18px;
+    margin: 5px;
+    padding: 8px 15px;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 5px;
     border: none;
     background: #3498db;
     color: white;
-    font-size: 15px;
 }
 
 nav button.active {
-    background: #1d6fa5;
-}
-
-nav button:hover {
     background: #1d6fa5;
 }
 
@@ -61,26 +54,6 @@ nav button:hover {
     display: block;
 }
 
-.video-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.video-list li {
-    padding: 10px;
-    margin-bottom: 8px;
-    background: #e0e0e0;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.video-list a {
-    color: #0984e3;
-    text-decoration: none;
-}
-
 .add-form input {
     padding: 6px;
     margin-right: 5px;
@@ -93,4 +66,17 @@ nav button:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.entry-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.entry-list li {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #e0e0e0;
+    border-radius: 4px;
 }
